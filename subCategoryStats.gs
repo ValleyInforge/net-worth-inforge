@@ -55,7 +55,14 @@ function subCategoryStats(type, settingsSheet, statsSheet, initialRowSpace, card
         for(e = 1; e <= 12; e++){
           statsSheet
             .getRange(initialRowSpace + currentlyCategoryLine, initialColumnSpace+1+e)
-            .setValue("=IFERROR(QUERY('"+ card +" - I/E'!$A$4:$O$1000;\"select sum("+ columnToLetter(moneyColumn) +") where "+ columnToLetter(categoryColumn) +" = '\"&B"+ (initialRowSpace + firstLineCategory) +"&\"' and "+ columnToLetter(subCategoryColumn) +" = '\"&C"+ (initialRowSpace + currentlyCategoryLine) +"&\"' and "+ columnToLetter(monthColumn) +" = \"&"+ columnToLetter(e + 3) +"4&\" label sum("+ columnToLetter(moneyColumn) +") ''\");0)");
+            .setValue("= \n" +
+              "IFERROR(QUERY('"+ card +"'!$A$4:$O$1000;\" \n" +
+              "select sum("+ columnToLetter(moneyColumn) +") \n" +
+              "where "+ columnToLetter(categoryColumn) +" = '\"&B"+ (initialRowSpace + firstLineCategory) +"&\"' \n" +
+              "and "+ columnToLetter(subCategoryColumn) +" = '\"&C"+ (initialRowSpace + currentlyCategoryLine) +"&\"' \n" +
+              "and "+ columnToLetter(monthColumn) +" = \"&"+ columnToLetter(e + 3) +"4&\" \n" +
+              "label sum("+ columnToLetter(moneyColumn) +") ''\");0)"
+            );
         }
       }
       // Resetta il valore di lastLineCategory a 1 (e non più 0).
@@ -79,7 +86,14 @@ function subCategoryStats(type, settingsSheet, statsSheet, initialRowSpace, card
       for(e = 1; e <= 12; e++){
         statsSheet
           .getRange(initialRowSpace + currentlyCategoryLine, initialColumnSpace + 1 + e)
-          .setValue("=IFERROR(QUERY('"+ card +" - I/E'!$A$4:$O$1000;\"select sum("+ columnToLetter(moneyColumn) +") where "+ columnToLetter(categoryColumn) +" = '\"&B"+ (initialRowSpace + firstLineCategory) +"&\"' and "+ columnToLetter(subCategoryColumn) +" = '\"&C"+ (initialRowSpace + currentlyCategoryLine) +"&\"' and "+ columnToLetter(monthColumn) +" = \"&"+ columnToLetter(e + 3) +"4&\" label sum("+ columnToLetter(moneyColumn) +") ''\");0)");
+          .setValue("= \n" +
+            "IFERROR(QUERY('"+ card +"'!$A$4:$O$1000;\"\n" +
+            "select sum("+ columnToLetter(moneyColumn) +") \n" +
+            "where "+ columnToLetter(categoryColumn) +" = '\"&B"+ (initialRowSpace + firstLineCategory) +"&\"' \n" +
+            "and "+ columnToLetter(subCategoryColumn) +" = '\"&C"+ (initialRowSpace + currentlyCategoryLine) +"&\"' \n" +
+            "and "+ columnToLetter(monthColumn) +" = \"&"+ columnToLetter(e + 3) +"4&\" \n" +
+            "label sum("+ columnToLetter(moneyColumn) +") ''\");0)"
+          );
       }
       // Incrementa di uno il numero di righe da unire in quando le due categorie sono la stessa (e quindi vanno unite).
       lastLineCategory++;
