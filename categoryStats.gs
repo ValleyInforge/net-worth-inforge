@@ -16,9 +16,8 @@ function categoryStats(type, settingsSheet, statsSheet, categorySpace, card){
   var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
   // Crea l'intestazione per le categorie e le sotto-categorie.
-  
   statsSheet.getRange((categorySpace === 0 ? initialRowSpace : initialRowSpace + categorySpace) - 2, initialColumnSpace - 1).setValue("Categories");
-  statsSheet.getRange((categorySpace === 0 ? initialRowSpace : initialRowSpace + categorySpace) -2, initialColumnSpace - 1, 1, 2).mergeAcross();;
+  statsSheet.getRange((categorySpace === 0 ? initialRowSpace : initialRowSpace + categorySpace) - 2, initialColumnSpace - 1, 1, 2).mergeAcross();;
   //Crea l'intestazione dei mesi.
   for(i = 0; i < 12; i++){
     statsSheet.getRange((categorySpace === 0 ? initialRowSpace : initialRowSpace + categorySpace) - 2, initialColumnSpace + 1 + i).setValue(months[i]);
@@ -38,7 +37,13 @@ function categoryStats(type, settingsSheet, statsSheet, categorySpace, card){
         for(e = 1; e <= 12; e++){
           statsSheet
             .getRange(initialRowSpace + categorySpace, initialColumnSpace + e)
-            .setValue("=IFERROR(QUERY('"+ card +" - I/E'!$A$4:$O$1000;\"select sum("+ columnToLetter(moneyColumn) +") where "+ columnToLetter(categoryColumn) +" = '\"&B"+ (initialRowSpace + categorySpace) +"&\"' and "+ columnToLetter(monthColumn) +" = \"&"+ columnToLetter(e + 3) +"4&\" label sum("+ columnToLetter(moneyColumn) +") ''\");0)");
+            .setValue("= \n" +
+              "IFERROR(QUERY('"+ card +"'!$A$4:$O$1000;\" \n" +
+              "select sum("+ columnToLetter(moneyColumn) +") \n" +
+              "where "+ columnToLetter(categoryColumn) +" = '\"&B"+ (initialRowSpace + categorySpace) +"&\"' \n" +
+              "and "+ columnToLetter(monthColumn) +" = \"&"+ columnToLetter(e + 3) +"4&\" \n" +
+              "label sum("+ columnToLetter(moneyColumn) +") ''\");0)"
+            );
         }
         categorySpace++;
       }else{
@@ -50,7 +55,13 @@ function categoryStats(type, settingsSheet, statsSheet, categorySpace, card){
         for(e = 1; e <= 12; e++){
           statsSheet
             .getRange(initialRowSpace + categorySpace, initialColumnSpace + e)
-            .setValue("=IFERROR(QUERY('"+ card +" - I/E'!$A$4:$O$1000;\"select sum("+ columnToLetter(moneyColumn) +") where "+ columnToLetter(categoryColumn) +" = '\"&B"+ (initialRowSpace + categorySpace) +"&\"' and "+ columnToLetter(monthColumn) +" = \"&"+ columnToLetter(e + 3) +"4&\" label sum("+ columnToLetter(moneyColumn) +") ''\");0)");
+            .setValue("= \n" +
+              "IFERROR(QUERY('"+ card +"'!$A$4:$O$1000;\" \n" +
+              "select sum("+ columnToLetter(moneyColumn) +") \n" +
+              "where "+ columnToLetter(categoryColumn) +" = '\"&B"+ (initialRowSpace + categorySpace) +"&\"' \n" +
+              "and "+ columnToLetter(monthColumn) +" = \"&"+ columnToLetter(e + 3) +"4&\" \n" +
+              "label sum("+ columnToLetter(moneyColumn) +") ''\");0)"
+            );
         }
         categorySpace++;
       }
