@@ -1,47 +1,56 @@
 function onEdit(e) {
   
   var range = e.range;
-  var spreadSheet = e.source;
-  var sheetName = spreadSheet.getActiveSheet().getName();
   var column = range.getColumn();
-  var row = range.getRow();
-  var value = e.value;
-  var returnValues = [];
-  var returnValuesTwo = [];
-  
-  if(('Hype - I/E' === sheetName || 'N26 - I/E' === sheetName || 'Satispay - I/E' === sheetName) && [4].includes(column)){
+  if(column === 4 || column === 13){
+    var spreadSheet = e.source;
+    var sheetName = spreadSheet.getActiveSheet().getName();
+    var row = range.getRow();
+    var value = e.value;
+    var returnValues = [];
+    var banks = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Menu").getRange(3,5, 5).getValues();
+    // CONVERTO L'ARRAY 2D A 1D
+    banks = banks.reduce(function(prev, next) {
+      return prev.concat(next);
+    });
+    banks = banks.filter(n => n);
 
-    var ss= SpreadsheetApp.getActiveSpreadsheet();
-    var dataSheet = ss.getSheetByName("» Expenses: Cat./Subcat.");
-    var mainSheet = ss.getSheetByName(sheetName);
-    var lastRowData = dataSheet.getLastRow();   
-    for(var i = 1; i <= lastRowData; i++){
-     if(value == dataSheet.getRange(i, 1).getValue()){
-       returnValues.push(dataSheet.getRange(i, 2).getValue());      
-     }
+    if(banks.includes(sheetName) && column === 4){
+
+      var ss= SpreadsheetApp.getActiveSpreadsheet();
+      var dataSheet = ss.getSheetByName("» Expenses: Cat./Subcat.");
+      var mainSheet = ss.getSheetByName(sheetName);
+      var lastRowData = dataSheet.getLastRow();   
+      for(var i = 1; i <= lastRowData; i++){
+        if(value == dataSheet.getRange(i, 1).getValue()){
+          returnValues.push(dataSheet.getRange(i, 2).getValue());      
+        }
+      }
+      mainSheet.getRange(row, column+1).clear();
+      var dropdown = mainSheet.getRange(row, column+1);
+      var rule = SpreadsheetApp.newDataValidation().requireValueInList(returnValues).build();
+      dropdown.setDataValidation(rule);
+
+    }else if(banks.includes(sheetName) && column === 13){
+
+      var ss= SpreadsheetApp.getActiveSpreadsheet();
+      var dataSheet = ss.getSheetByName("» Income: Cat./Subcat.");
+      var mainSheet = ss.getSheetByName(sheetName);
+      var lastRowData = dataSheet.getLastRow();    
+      for(var i = 1; i <= lastRowData; i++){
+        if(value == dataSheet.getRange(i, 1).getValue()){
+          returnValues.push(dataSheet.getRange(i, 2).getValue());      
+        }
+      }
+      mainSheet.getRange(row, column+1).clear();
+      var dropdown = mainSheet.getRange(row, column+1);
+      var rule = SpreadsheetApp.newDataValidation().requireValueInList(returnValues).build();
+      dropdown.setDataValidation(rule);
+
     }
-    mainSheet.getRange(row, column+1).clear();
-    var dropdown = mainSheet.getRange(row, column+1);
-    var rule = SpreadsheetApp.newDataValidation().requireValueInList(returnValues).build();
-    dropdown.setDataValidation(rule);
-
-  }else if(('Hype - I/E' === sheetName || 'N26 - I/E' === sheetName || 'Satispay - I/E' === sheetName) && [13].includes(column)){
-
-    var ss= SpreadsheetApp.getActiveSpreadsheet();
-    var dataSheet = ss.getSheetByName("» Income: Cat./Subcat.");
-    var mainSheet = ss.getSheetByName(sheetName);
-    var lastRowData = dataSheet.getLastRow();    
-    for(var i = 1; i <= lastRowData; i++){
-     if(value == dataSheet.getRange(i, 1).getValue()){
-       returnValues.push(dataSheet.getRange(i, 2).getValue());      
-     }
-    }
-    mainSheet.getRange(row, column+1).clear();
-    var dropdown = mainSheet.getRange(row, column+1);
-    var rule = SpreadsheetApp.newDataValidation().requireValueInList(returnValues).build();
-    dropdown.setDataValidation(rule);
-
-  }else if(('Hype - I/E' === sheetName || 'N26 - I/E' === sheetName || 'Satispay - I/E' === sheetName) && [5].includes(column)){
+  }
+  // VERIFICARE CHE NON SERVA ED ELIMINARE
+  /*else if(banks.includes(sheetName) && column === 5){
     var ss= SpreadsheetApp.getActiveSpreadsheet();
     var dataSheet = ss.getSheetByName("» Expenses: Cat./Subcat.");
     var lastRowData = dataSheet.getLastRow();
@@ -53,7 +62,7 @@ function onEdit(e) {
        mainSheet.getRange(row, column + 2).setValue(0);
      }  
     }
-  }else if(('Hype - I/E' === sheetName || 'N26 - I/E' === sheetName || 'Satispay - I/E' === sheetName) && [14].includes(column)){
+  }else if(banks.includes(sheetName) && column === 14){
     var ss= SpreadsheetApp.getActiveSpreadsheet();
     var dataSheet = ss.getSheetByName("» Income: Cat./Subcat.");
     var lastRowData = dataSheet.getLastRow();
@@ -65,8 +74,7 @@ function onEdit(e) {
        mainSheet.getRange(row, column - 5).setValue(0);
      }
     }
-  }
-  SpreadsheetApp.getActive().toast("Lo script ha finito le modifiche automatiche, prosegui pure :)", "Script terminato", 3);
+  }*/
 }
 
 
@@ -91,8 +99,15 @@ function letterToColumn(letter){
 
 
 function updateMonthlyIncomeExpenses(){
+  var banks = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Menu").getRange(3,5, 5).getValues();
+  // CONVERTO L'ARRAY 2D A 1D
+  banks = banks.reduce(function(prev, next) {
+    return prev.concat(next);
+  });
+  banks = banks.filter(n => n);
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var type = ss.getSheetByName("Menu").getRange(3,2).getValue();
+  
   if(type == "expenses"){
     var statsSheet = ss.getSheetByName("Monthly Expenses / Bank account");
     var settingsSheet = ss.getSheetByName("» Expenses: Cat./Subcat.");
@@ -110,10 +125,15 @@ function updateMonthlyIncomeExpenses(){
   statsSheet.unhideRow(rRows);
   // Serve ad individuare la giusta posizione per la categoria successiva quando si genera la tabella. Impostato di partenza a 0.
   var categorySpace = 0;
-  // Genero stats mensili per Hype
-  var hypeCatStart = categoryStats(type, settingsSheet, statsSheet, categorySpace, 'Hype');
-  var hypeSubCatStart = subCategoryStats(type, settingsSheet, statsSheet, hypeCatStart, 'Hype');
-  // Genero stats mensili per N26
-  var n26CatStart = categoryStats(type, settingsSheet, statsSheet, hypeSubCatStart+2, 'N26');
-  var n26SubCatStart = subCategoryStats(type, settingsSheet, statsSheet, n26CatStart, 'N26');
+  for(k = 1; k <= banks.length; k++){
+    if(k === 1){
+      SpreadsheetApp.getUi().alert("uno");
+      var firstCatStats = categoryStats(type, settingsSheet, statsSheet, categorySpace, banks[k-1]);
+      var firstSubCatStats = subCategoryStats(type, settingsSheet, statsSheet, firstCatStats, banks[k-1]);
+    }else if(k > 1){
+      SpreadsheetApp.getUi().alert(firstSubCatStats);
+      var nextCatStats = categoryStats(type, settingsSheet, statsSheet, (firstSubCatStats+2), banks[k-1]);
+      subCategoryStats(type, settingsSheet, statsSheet, nextCatStats, banks[k-1]);
+    }    
+  };
 }
