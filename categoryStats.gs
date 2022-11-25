@@ -1,5 +1,6 @@
+// Valley - inforge.net //
 // Funzione che genera le tabelle mensili per categorie per ogni singolo conto
-function categoryStats(type, settingsSheet, statsSheet, categorySpace, card){
+function categoryStats(type, settingsSheet, statsSheet, categorySpace, card, initialRowSpace, initialColumnSpace, firstLineCategory){
   var settingsValue = settingsSheet.getDataRange().getValues();
   // Indica la colonna con i valori delle categorie da usare per generare le tabelle per le uscite o le entrate.
   var categoryColumn = type == "expenses" ? 4 : type == "income" ? 13 : false;
@@ -7,13 +8,10 @@ function categoryStats(type, settingsSheet, statsSheet, categorySpace, card){
   var moneyColumn = type == "expenses" ? 3 : type == "income" ? 12 : false;
   // Indica la colonna con i valori dei mesi da usare per generare le tabelle per le uscite o le entrate.
   var monthColumn = type == "expenses" ? 2 : type == "income" ? 11 : false;
-  // Indica lo spazio verticale (numero di righe) da tenere prima della lista delle categorie.
-  var initialRowSpace = 5;
   var newInitialRowSpace = categorySpace;
   // Indica lo spazio orizzontale (numero di colonne) da tenere prima della lista delle categorie.
-  var initialColumnSpace = 3;
-  var firstLineCategory = 0;
-  var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  initialColumnSpace = 3;
+  
 
   // Crea l'intestazione per le categorie e le sotto-categorie.
   statsSheet.getRange((categorySpace === 0 ? initialRowSpace : initialRowSpace + categorySpace) - 2, initialColumnSpace - 1).setValue("Categories");
