@@ -1,5 +1,6 @@
+// Valley - inforge.net //
 // Funzione che genera le tabelle mensili per categorie e sottocategorie per ogni singolo conto
-function subCategoryStats(type, settingsSheet, statsSheet, initialRowSpace, card){
+function subCategoryStats(type, settingsSheet, statsSheet, initialRowSpace, card, lastLineCategory, initialColumnSpace){
   // Indica tutti i valori presenti nello sheet "Impostazioni".
   var settingsValue = settingsSheet.getDataRange().getValues();
   // Indica la colonna con i valori delle categorie da usare per generare le tabelle per le uscite o le entrate.
@@ -11,15 +12,12 @@ function subCategoryStats(type, settingsSheet, statsSheet, initialRowSpace, card
   // Indica la colonna con i valori dei mesi da usare per generare le tabelle per le uscite o le entrate.
   var monthColumn = type == "expenses" ? 2 : type == "income" ? 11 : false;
   // Indica lo spazio orizzontale (numero di colonne) da tenere prima della lista delle categorie.
-  var initialColumnSpace = 2;
-  // Indica il numero di righe da unire perché appartenenti alla stessa categoria. Impostato di partenza a 0, al primo caso sale sempre a 1. Poi al reset tornerà sempre a 1.
-  var lastLineCategory = 0;
+  initialColumnSpace = 2;
   // Indica quando sono finite le categorie e sotto-categorie.
   var lastSubCategory = 0;
   // Serve ad individuare la giusta posizione per la categoria successiva quando si genera la tabella. Impostato di partenza a 0.
   var firstLineCategory = 0;
   initialRowSpace += 5;
-  var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
   // Crea l'intestazione per le categorie e le sotto-categorie.
   statsSheet.getRange(initialRowSpace - 2, initialColumnSpace).setValue("Categories");
