@@ -1,3 +1,4 @@
+// Valley - inforge.net //
 function onOpen() {
   createMenuWithSubMenu();
 }
