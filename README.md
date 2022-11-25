@@ -1,3 +1,5 @@
+<img src="https://i.imgur.com/q5jvZOb.png" width="95px">
+
 # net-worth-inforge
 
 Google Sheet per la gestione del proprio budget con funzioni in Apps Script per l'autocompilazione.
