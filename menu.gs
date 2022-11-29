@@ -1,9 +1,9 @@
 // Valley - inforge.net //
-function onOpen() {
+function onOpen(){
   createMenuWithSubMenu();
 }
 
-function createMenuWithSubMenu() {
+function createMenuWithSubMenu(){
   /*var subMenu = SpreadsheetApp.getUi().createMenu("Advanced")
     .addItem("Setting D", "settingD")
     .addItem("Setting E", "settingE");
