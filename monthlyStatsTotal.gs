@@ -1,5 +1,4 @@
 // Valley - inforge.net //
-// Devo fare un array con settingsValue.length dal quale togliere il numero delle righe che non rispetta settingsValue.length[x][3] === false e poi con le restanti faccio il resto
 function updateMonthlyIncomeExpensesTotal(){
   
   var type = ss.getSheetByName("Menu").getRange(3,2).getValue();
@@ -85,7 +84,7 @@ function updateMonthlyIncomeExpensesTotal(){
   var categorySpace = 0;
   // Genero stats mensili totali
   SpreadsheetApp.getActive().toast("Genero la tabella delle statistiche mensili totali..", "Script in esecuzione", -1);
-  var hypeCatStartTotal = categoryStatsTotal(type, settingsSheet, statsSheet, categorySpace, initialRowSpace, initialColumnSpace, firstLineCategory);
-  subCategoryStatsTotal(type, settingsSheet, statsSheet, hypeCatStartTotal, lastLineCategory, initialColumnSpace);
+  var catStartTotal = categoryStatsTotal(type, settingsSheet, statsSheet, categorySpace, initialRowSpace, initialColumnSpace, firstLineCategory);
+  subCategoryStatsTotal(type, settingsSheet, statsSheet, catStartTotal, lastLineCategory, initialColumnSpace);
   SpreadsheetApp.getActive().toast("Finito!", "Script terminato", 4);
 }
