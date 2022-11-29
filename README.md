@@ -1,4 +1,4 @@
-<img src="https://i.imgur.com/q5jvZOb.png" width="95px">
+<h1>inforge.net</h1>
 
 # net-worth-inforge
 
