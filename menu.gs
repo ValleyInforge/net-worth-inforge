@@ -1,14 +1,19 @@
-// Valley - inforge.net //
+// Funzione che inserisce il menu all'apertura del file.
 function onOpen(){
   createMenuWithSubMenu();
 }
 
+// Funzione che crea il menu
 function createMenuWithSubMenu(){
+  // Submenu inattivo ma che tengo per utilizzarlo quando migliorerò i menu.
+
   /*var subMenu = SpreadsheetApp.getUi().createMenu("Advanced")
     .addItem("Setting D", "settingD")
     .addItem("Setting E", "settingE");
   */
   
+  // Con .addItem inserisco le singole voci con nome ed identificativo. 
+  // L'identificativo deve corrispondere ad una funzione (quelle sotto) che va a definire cosa sucede quando clicchi quella voce nel menu. 
   SpreadsheetApp.getUi().createMenu("⚙️ Menu")
     .addItem("Make with ✎ by Valley - Inforge.net", "inforge")
     .addItem("Settings", "settings")
@@ -30,6 +35,7 @@ function createMenuWithSubMenu(){
 }
 
 function inforge() {
+  // Da finire, ci metterò link al forum o altro.
   return true;
 }
 
