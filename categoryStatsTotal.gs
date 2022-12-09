@@ -1,4 +1,4 @@
-// Valley - inforge.net //
+// Funzione che genera le tabelle mensili suddivise per categorie con i valori totali.
 function categoryStatsTotal(type, settingsSheet, statsSheet, categorySpace, initialRowSpace, initialColumnSpace, firstLineCategory){
   
   var settingsValue = settingsSheet.getDataRange().getValues();
@@ -54,9 +54,12 @@ function categoryStatsTotal(type, settingsSheet, statsSheet, categorySpace, init
         // Scrive il nome della categoria attuale.
         statsSheet.getRange(initialRowSpace + categorySpace,initialColumnSpace - 1).setValue(settingsValue[item][0]);
         statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace - 1, 1, 2).merge();
+        // Per ogni mese aggiunge la formula "query" per calcolare i valori per singola categoria.
         for(e = 1; e <= 12; e++){
           var string = "";
+          // Per ogni banca aggiunge un pezzo della stringa così da fare il totale.
           banks.forEach(function(item, index, array){
+            // Se è la prima..
             if (index === 0){ 
               string = string + "= \
                 IFERROR(QUERY('"+ item +"'!$A$4:$O$1000;\"select sum("+ columnToLetter(moneyColumn) +") \n" +
@@ -65,12 +68,14 @@ function categoryStatsTotal(type, settingsSheet, statsSheet, categorySpace, init
                   "and "+ columnToLetter(cleanColumns) +" <> 1 \n" +
                 "label sum("+ columnToLetter(moneyColumn) +") ''\");0) \n" +
                 "+ \n";
+            // ..se è l'ultima.. 
             }else if(index === array.length - 1){
               string = string + "IFERROR(QUERY('"+ item +"'!$A$4:$O$1000;\"select sum("+ columnToLetter(moneyColumn) +") \n" +
                   "where "+ columnToLetter(categoryColumn) +" = '\"&B"+ (initialRowSpace + categorySpace) +"&\"' \n" +
                   "and "+ columnToLetter(monthColumn) +" = \"&"+ columnToLetter(e + 3) +"4&\" \n" +
                   "and "+ columnToLetter(cleanColumns) +" <> 1 \n" +
                 "label sum("+ columnToLetter(moneyColumn) +") ''\");0)";
+            // ..tutte le altre.
             }else{
               string = string + "IFERROR(QUERY('"+ item +"'!$A$4:$O$1000;\"select sum("+ columnToLetter(moneyColumn) +") \n" +
                   "where "+ columnToLetter(categoryColumn) +" = '\"&B"+ (initialRowSpace + categorySpace) +"&\"' \n" +
@@ -82,6 +87,7 @@ function categoryStatsTotal(type, settingsSheet, statsSheet, categorySpace, init
           });
           statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + e).setValue(string);
         }
+        // Inserisce la colonna con le medie e il rapporto ultimo mese/media.
         statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + 14 /* 12 mesi + 1 colonna di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
           "AVERAGE("+ columnToLetter(initialColumnSpace + 1) +""+ (initialRowSpace + categorySpace) +":"+ columnToLetter(initialColumnSpace + lastMonth)+""+ (initialRowSpace + categorySpace) +")");
         statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + 15 /* 12 mesi + 2 colonna di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
@@ -92,9 +98,12 @@ function categoryStatsTotal(type, settingsSheet, statsSheet, categorySpace, init
         // Scrive il nome della categoria precedente.
         statsSheet.getRange(initialRowSpace + categorySpace,initialColumnSpace).setValue(settingsValue[firstLineCategory][0]);
         statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace - 1, 1, 2).merge();
+        // Per ogni mese aggiunge la formula "query" per calcolare i valori per singola categoria.
         for(e = 1; e <= 12; e++){
           var string = "";
+          // Per ogni banca aggiunge un pezzo della stringa così da fare il totale.
           banks.forEach(function(item, index, array){
+            // Se è la prima..
             if (index === 0){ 
               string = string + "= \
                 IFERROR(QUERY('"+ item +"'!$A$4:$O$1000;\"select sum("+ columnToLetter(moneyColumn) +") \n" +
@@ -103,12 +112,14 @@ function categoryStatsTotal(type, settingsSheet, statsSheet, categorySpace, init
                   "and "+ columnToLetter(cleanColumns) +" <> 1 \n" +
                 "label sum("+ columnToLetter(moneyColumn) +") ''\");0) \n" +
                 "+ \n";
+            // ..se è l'ultima.. 
             }else if(index === array.length - 1){
               string = string + "IFERROR(QUERY('"+ item +"'!$A$4:$O$1000;\"select sum("+ columnToLetter(moneyColumn) +") \n" +
                   "where "+ columnToLetter(categoryColumn) +" = '\"&B"+ (initialRowSpace + categorySpace) +"&\"' \n" +
                   "and "+ columnToLetter(monthColumn) +" = \"&"+ columnToLetter(e + 3) +"4&\" \n" +
                   "and "+ columnToLetter(cleanColumns) +" <> 1 \n" +
                 "label sum("+ columnToLetter(moneyColumn) +") ''\");0)";
+            // ..tutte le altre.
             }else{
               string = string + "IFERROR(QUERY('"+ item +"'!$A$4:$O$1000;\"select sum("+ columnToLetter(moneyColumn) +") \n" +
                   "where "+ columnToLetter(categoryColumn) +" = '\"&B"+ (initialRowSpace + categorySpace) +"&\"' \n" +
@@ -120,6 +131,7 @@ function categoryStatsTotal(type, settingsSheet, statsSheet, categorySpace, init
           });
           statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + e).setValue(string);
         }
+        // Inserisce la colonna con le medie e il rapporto ultimo mese/media.
         statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + 14 /* 12 mesi + 1 colonna di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
           "AVERAGE("+ columnToLetter(initialColumnSpace + 1) +""+ (initialRowSpace + categorySpace) +":"+ columnToLetter(initialColumnSpace + lastMonth)+""+ (initialRowSpace + categorySpace) +")");
         statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + 15 /* 12 mesi + 2 colonna di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
