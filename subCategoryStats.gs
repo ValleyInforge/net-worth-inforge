@@ -1,4 +1,3 @@
-// Valley - inforge.net //
 // Funzione che genera le tabelle mensili per categorie e sottocategorie per ogni singolo conto
 function subCategoryStats(type, settingsSheet, statsSheet, initialRowSpace, card, lastLineCategory, initialColumnSpace){
   // Indica tutti i valori presenti nello sheet "Impostazioni".
