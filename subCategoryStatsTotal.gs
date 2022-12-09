@@ -1,4 +1,3 @@
-// Valley - inforge.net //
 function subCategoryStatsTotal(type, settingsSheet, statsSheet, initialRowSpace, lastLineCategory, initialColumnSpace){
 
   // Indica tutti i valori presenti nello sheet "Impostazioni".
