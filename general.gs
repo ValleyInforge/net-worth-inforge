@@ -1,25 +1,21 @@
+// Valley - inforge.net //
 // Funzione eseguita ad ogni update dello spreadsheet. Serve a generare i menu a tendina delle sottocategorie negli sheets dei conti.
-function onEdit(e) {
-  // Variabili che selezionano prima la cella che l'utente ha modificato, poi seleziono la colonna.  
+function onEdit(e) {  
   var range = e.range;
   var column = range.getColumn();
   // Controlla se è stata modificata una cella delle colonne 4 o 13 (di qualsiasi foglio). Queste colonne corrispondono a quelle con i menu a tendina delle categorie.
   if(column === 4 || column === 13){
-    // solo in tal caso va a definire le successive variabili sempre riferite alla cella modificata.
+    // solo in tal caso va a definire le successive variabili.
     var spreadSheet = e.source;
     var sheetName = spreadSheet.getActiveSheet().getName();
     var row = range.getRow();
     var value = e.value;
-    // variabile che andrà a contenere i valori da mettere nel menu a tendina delle sottocategorie.
     var returnValues = [];
-    
-    
     // Se lo sheet è compreso tra gli sheets dei conti e la riga modificata è la 4 (uscite).
     if(banks.includes(sheetName) && column === 4){
-      // Variabile che identifica lo sheet con l'elenco delle categorie e sottocategorie per le uscite.
+
       var dataSheet = ss.getSheetByName("» Expenses: Cat./Subcat.");
       var mainSheet = ss.getSheetByName(sheetName);
-      // Ottengo il numero dell'ultima riga che presenta un valore nello sheet.
       var lastRowData = dataSheet.getLastRow(); 
       // Per ogni sottocategoria presa dallo sheet "» Expenses: Cat./Subcat."...
       for(var i = 1; i <= lastRowData; i++){
@@ -36,14 +32,12 @@ function onEdit(e) {
       // Genera il menu a tendina con le validation rule.
       var rule = SpreadsheetApp.newDataValidation().requireValueInList(returnValues).build();
       dropdown.setDataValidation(rule);
-    
-    
+
     // Altrimenti se lo sheet è compreso tra gli sheets dei conti e la riga modificata è la 13 (entrate).
     }else if(banks.includes(sheetName) && column === 13){
-      // Variabile che identifica lo sheet con l'elenco delle categorie e sottocategorie per le entrate.
+
       var dataSheet = ss.getSheetByName("» Income: Cat./Subcat.");
       var mainSheet = ss.getSheetByName(sheetName);
-      // Ottengo il numero dell'ultima riga che presenta un valore nello sheet.
       var lastRowData = dataSheet.getLastRow();   
       // Per ogni sottocategoria presa dallo sheet "» Income: Cat./Subcat."...
       for(var i = 1; i <= lastRowData; i++){
@@ -60,11 +54,12 @@ function onEdit(e) {
       // Genera il menu a tendina con le validation rule.
       var rule = SpreadsheetApp.newDataValidation().requireValueInList(returnValues).build();
       dropdown.setDataValidation(rule);
+
     }
   }
 }
 
-// Semplice funzione presa online che converte il numero di una colonna in lettera (es. la colonna "2" diventa "B").
+
 function columnToLetter(column){
   var temp, letter = '';
   while (column > 0){
@@ -75,7 +70,7 @@ function columnToLetter(column){
   return letter;
 }
 
-// Semplice funzione presa online che converte la lettera di una colonna in numero (es. la colonna "B" diventa "2").
+
 function letterToColumn(letter){
   var column = 0, length = letter.length;
   for (var i = 0; i < length; i++){
