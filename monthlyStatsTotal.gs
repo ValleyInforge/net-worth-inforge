@@ -13,7 +13,7 @@ function updateMonthlyIncomeExpensesTotal(){
     var expensesCategoryList = ss.getSheetByName("» Expenses: Cat./Subcat.");
     var lastRowDataExpenses = expensesCategoryList.getLastRow();
     // Finestra che informa lo stato della funzione in corso
-    SpreadsheetApp.getActive().toast("Mi preparo per l'aggiornamento degli sheet dei conti..", "Script in esecuzione", -1);
+    SpreadsheetApp.getActive().toast("Mi preparo per l'aggiornamento degli sheet dei conti..", "⏳ Script in esecuzione", -1);
     // Per ogni sottocategoria...
     for(var i = 1; i <= lastRowDataExpenses; i++){
       // ...se la sottocategoria ha nella terza colonna "true" va considerata tra quelle da escludere nel conteggio totale, quindi viene messa dentro la var subCategoryCleaned.
@@ -25,7 +25,7 @@ function updateMonthlyIncomeExpensesTotal(){
     // Per ogni conto..
     banks.forEach(function(item){
       // Finestra che informa lo stato della funzione in corso
-      SpreadsheetApp.getActive().toast("Procedo ad aggiornare lo sheet del conto "+ item +" con i valori delle uscite da non considerare nella conta totale..", "Script in esecuzione", -1);
+      SpreadsheetApp.getActive().toast("Procedo ad aggiornare lo sheet del conto "+ item +" con i valori delle uscite da non considerare nella conta totale..", "⏳ Script in esecuzione", -1);
       // Resetta i campi impostandoli tutti a zero
       ss.getSheetByName(item).getRange(4, 7, ss.getSheetByName(item).getRange("C4:C").getValues().filter(String).length).setValue(0);
       // Per ogni record presente nello sheet del conto...
@@ -53,7 +53,7 @@ function updateMonthlyIncomeExpensesTotal(){
     var incomeCategoryList = ss.getSheetByName("» Income: Cat./Subcat.");
     var lastRowDataIncome = incomeCategoryList.getLastRow();
     // Finestra che informa lo stato della funzione in corso
-    SpreadsheetApp.getActive().toast("Mi preparo per l'aggiornamento degli sheet dei conti..", "Script in esecuzione", -1);
+    SpreadsheetApp.getActive().toast("Mi preparo per l'aggiornamento degli sheet dei conti..", "⏳ Script in esecuzione", -1);
     // Per ogni sottocategoria...
     for(var i = 1; i <= lastRowDataIncome; i++){
       // ...se la sottocategoria ha nella terza colonna "true" va considerata tra quelle da escludere nel conteggio totale, quindi viene messa dentro la var subCategoryCleaned.
@@ -65,7 +65,7 @@ function updateMonthlyIncomeExpensesTotal(){
     // Per ogni conto..
     banks.forEach(function(item){
       // Finestra che informa lo stato della funzione in corso
-      SpreadsheetApp.getActive().toast("Procedo ad aggiornare lo sheet del conto "+ item +" con i valori delle uscite da non considerare nella conta totale..", "Script in esecuzione", -1);
+      SpreadsheetApp.getActive().toast("Procedo ad aggiornare lo sheet del conto "+ item +" con i valori delle uscite da non considerare nella conta totale..", "⏳ Script in esecuzione", -1);
       // Resetta i campi impostandoli tutti a zero
       ss.getSheetByName(item).getRange(4, 9, ss.getSheetByName(item).getRange("L4:L").getValues().filter(String).length).setValue(0);
       // Per ogni record presente nello sheet del conto...
@@ -100,10 +100,10 @@ function updateMonthlyIncomeExpensesTotal(){
   // Serve ad individuare la giusta posizione per la categoria successiva quando si genera la tabella. Impostato di partenza a 0.
   var categorySpace = 0;
   // Finestra che informa lo stato della funzione in corso
-  SpreadsheetApp.getActive().toast("Genero la tabella delle statistiche mensili totali..", "Script in esecuzione", -1);
+  SpreadsheetApp.getActive().toast("Genero la tabella delle statistiche mensili totali..", "⏳ Script in esecuzione", -1);
   // Genero stats mensili totali
   var catStartTotal = categoryStatsTotal(type, settingsSheet, statsSheet, categorySpace, initialRowSpace, initialColumnSpace, firstLineCategory);
   subCategoryStatsTotal(type, settingsSheet, statsSheet, catStartTotal, lastLineCategory, initialColumnSpace);
   // Finestra che informa lo stato della funzione in corso
-  SpreadsheetApp.getActive().toast("Finito!", "Script terminato", 4);
+  SpreadsheetApp.getActive().toast("Finito!", "✅ Script terminato", 4);
 }
