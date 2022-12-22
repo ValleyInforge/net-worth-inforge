@@ -26,6 +26,9 @@ function subCategoryStatsTotal(type, settingsSheet, statsSheet, initialRowSpace,
       statsSheet.getRange(initialRowSpace - 1, initialColumnSpace + 2 + i).setValue(i + 1);
       statsSheet.getRange(initialRowSpace - 2, initialColumnSpace + 4 + i).setValue("Media");
       statsSheet.getRange(initialRowSpace - 2, initialColumnSpace + 5 + i).setValue("Ultimo mese risp media");
+      statsSheet.getRange(initialRowSpace - 2, initialColumnSpace + 6 + i).setValue("Totale");
+      statsSheet.getRange(initialRowSpace - 2, initialColumnSpace + 7 + i).setValue("Grafici");
+      statsSheet.getRange(initialRowSpace - 2, initialColumnSpace + 7 + i).merge();
     }else{
       statsSheet.getRange(initialRowSpace - 2, initialColumnSpace + 2 + i).setValue(months[i]);
       statsSheet.getRange(initialRowSpace - 1, initialColumnSpace + 2 + i).setValue(i + 1);
@@ -49,6 +52,8 @@ function subCategoryStatsTotal(type, settingsSheet, statsSheet, initialRowSpace,
   var previousLineCategory = cleanedSettingValue[0];
   var beginningFirstLineCategory = 0;
   var previousCategoryName;
+  // Variabile utilizzata per sapere in anticipo il numero di categorie valide (e non sottocategorie). Viene usata per i grafici.
+  var categoryLengthCheck = [];
   cleanedSettingValue.forEach(function (item, index){
     // SE SI TRATTA DELL'ULTIMA CATEGORIA
     if(index === (cleanedSettingValue.length - 1)){
@@ -99,6 +104,17 @@ function subCategoryStatsTotal(type, settingsSheet, statsSheet, initialRowSpace,
           "AVERAGE("+ columnToLetter(initialColumnSpace + 2) +""+ (initialRowSpace + index) +":"+ columnToLetter(initialColumnSpace + 1 + lastMonth)+""+ (initialRowSpace + index) +")");
         statsSheet.getRange(initialRowSpace + index, initialColumnSpace + 16 /* 12 mesi + 2 colonna di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
           "IFERROR(("+ columnToLetter(initialColumnSpace + 1 + lastMonth) +""+ (initialRowSpace + index) +"/Q"+ (initialRowSpace + index) +")-1;\"-\")");
+        // Inseriesce la colonna con il totale per categoria.
+        statsSheet.getRange(initialRowSpace + index, initialColumnSpace + 17 /* 12 mesi + 3 colonne di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
+          "SUM("+ columnToLetter(initialColumnSpace + 2) +""+ (initialRowSpace + index) +":"+ columnToLetter(initialColumnSpace + 1 + lastMonth)+""+ (initialRowSpace + index) +")");
+        // Inserisce la colonna con il grafico a barre.
+        statsSheet.getRange(initialRowSpace + index, initialColumnSpace + 18 /* 12 mesi + 4 colonne di spazio + la colonna in cui deve scrivere */).setValue('= \n' +
+          'SPARKLINE(S'+ (initialRowSpace + index) +';{"charttype"\\"bar";"color1"\\"teal"; "max"\\ ROUNDUP(max(S'+ (initialRowSpace) +':S'+ (initialRowSpace + cleanedSettingValue.length - 1) +'))})');
+        // Inserisce la colonna con il grafico a linee.
+        statsSheet.getRange(initialRowSpace + index, initialColumnSpace + 19 /* 12 mesi + 5 colonne di spazio + la colonna in cui deve scrivere */).setValue('= \n' +
+          'SPARKLINE('+ columnToLetter(initialColumnSpace + 2) +''+ (initialRowSpace + index) +':'+ columnToLetter(initialColumnSpace + 1 + lastMonth)+''+ (initialRowSpace + index) +';' +
+          '{"color"\\IF('+ columnToLetter(initialColumnSpace + 1 + lastMonth) +''+ (initialRowSpace + index) +'>Q'+ (initialRowSpace + index) +';"red";"green");' +
+          '"ymax"\\ROUNDUP(max('+ columnToLetter(initialColumnSpace + 2) +''+ (initialRowSpace + index) +':'+ columnToLetter(initialColumnSpace + 1 + lastMonth)+''+ (initialRowSpace + index) +')); "linewidth"\\2})');
         // SCRIVE IL NOME DELLA CATEGORIA ATTUALE
         statsSheet.getRange(initialRowSpace + index, initialColumnSpace).setValue(settingsValue[item][0]);
       // SE LE CATEGORIE SONO UGUALI
@@ -141,6 +157,17 @@ function subCategoryStatsTotal(type, settingsSheet, statsSheet, initialRowSpace,
           "AVERAGE("+ columnToLetter(initialColumnSpace + 2) +""+ (initialRowSpace + index) +":"+ columnToLetter(initialColumnSpace + 1 + lastMonth)+""+ (initialRowSpace + index) +")");
         statsSheet.getRange(initialRowSpace + index, initialColumnSpace + 16 /* 12 mesi + 2 colonna di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
           "IFERROR(("+ columnToLetter(initialColumnSpace + 1 + lastMonth) +""+ (initialRowSpace + index) +"/Q"+ (initialRowSpace + index) +")-1;\"-\")");
+        // Inseriesce la colonna con il totale per categoria.
+        statsSheet.getRange(initialRowSpace + index, initialColumnSpace + 17 /* 12 mesi + 3 colonne di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
+          "SUM("+ columnToLetter(initialColumnSpace + 2) +""+ (initialRowSpace + index) +":"+ columnToLetter(initialColumnSpace + 1 + lastMonth)+""+ (initialRowSpace + index) +")");
+        // Inserisce la colonna con il grafico a barre.
+        statsSheet.getRange(initialRowSpace + index, initialColumnSpace + 18 /* 12 mesi + 4 colonne di spazio + la colonna in cui deve scrivere */).setValue('= \n' +
+          'SPARKLINE(S'+ (initialRowSpace + index) +';{"charttype"\\"bar";"color1"\\"teal"; "max"\\ ROUNDUP(max(S'+ (initialRowSpace) +':S'+ (initialRowSpace + cleanedSettingValue.length - 1) +'))})');
+        // Inserisce la colonna con il grafico a linee.
+        statsSheet.getRange(initialRowSpace + index, initialColumnSpace + 19 /* 12 mesi + 5 colonne di spazio + la colonna in cui deve scrivere */).setValue('= \n' +
+          'SPARKLINE('+ columnToLetter(initialColumnSpace + 2) +''+ (initialRowSpace + index) +':'+ columnToLetter(initialColumnSpace + 1 + lastMonth)+''+ (initialRowSpace + index) +';' +
+          '{"color"\\IF('+ columnToLetter(initialColumnSpace + 1 + lastMonth) +''+ (initialRowSpace + index) +'>Q'+ (initialRowSpace + index) +';"red";"green");' +
+          '"ymax"\\ROUNDUP(max('+ columnToLetter(initialColumnSpace + 2) +''+ (initialRowSpace + index) +':'+ columnToLetter(initialColumnSpace + 1 + lastMonth)+''+ (initialRowSpace + index) +')); "linewidth"\\2})');
         // INCREMENTA DI 1 IL NUMERO DI RIGHE DA UNIRE QUANDO LE CATEGORIE SONO LA STESSA
         lastLineCategory++;
         // SCRIVE IL NOME DELLA CATEGORIA ATTUALE
@@ -198,6 +225,17 @@ function subCategoryStatsTotal(type, settingsSheet, statsSheet, initialRowSpace,
         "AVERAGE("+ columnToLetter(initialColumnSpace + 2) +""+ (initialRowSpace + index) +":"+ columnToLetter(initialColumnSpace + 1 + lastMonth)+""+ (initialRowSpace + index) +")");
       statsSheet.getRange(initialRowSpace + index, initialColumnSpace + 16 /* 12 mesi + 2 colonna di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
         "IFERROR(("+ columnToLetter(initialColumnSpace + 1 + lastMonth) +""+ (initialRowSpace + index) +"/Q"+ (initialRowSpace + index) +")-1;\"-\")");
+      // Inseriesce la colonna con il totale per categoria.
+      statsSheet.getRange(initialRowSpace + index, initialColumnSpace + 17 /* 12 mesi + 3 colonne di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
+        "SUM("+ columnToLetter(initialColumnSpace + 2) +""+ (initialRowSpace + index) +":"+ columnToLetter(initialColumnSpace + 1 + lastMonth)+""+ (initialRowSpace + index) +")");
+      // Inserisce la colonna con il grafico a barre.
+      statsSheet.getRange(initialRowSpace + index, initialColumnSpace + 18 /* 12 mesi + 4 colonne di spazio + la colonna in cui deve scrivere */).setValue('= \n' +
+        'SPARKLINE(S'+ (initialRowSpace + index) +';{"charttype"\\"bar";"color1"\\"teal"; "max"\\ ROUNDUP(max(S'+ (initialRowSpace) +':S'+ (initialRowSpace + cleanedSettingValue.length - 1) +'))})');
+      // Inserisce la colonna con il grafico a linee.
+      statsSheet.getRange(initialRowSpace + index, initialColumnSpace + 19 /* 12 mesi + 5 colonne di spazio + la colonna in cui deve scrivere */).setValue('= \n' +
+        'SPARKLINE('+ columnToLetter(initialColumnSpace + 2) +''+ (initialRowSpace + index) +':'+ columnToLetter(initialColumnSpace + 1 + lastMonth)+''+ (initialRowSpace + index) +';' +
+        '{"color"\\IF('+ columnToLetter(initialColumnSpace + 1 + lastMonth) +''+ (initialRowSpace + index) +'>Q'+ (initialRowSpace + index) +';"red";"green");' +
+        '"ymax"\\ROUNDUP(max('+ columnToLetter(initialColumnSpace + 2) +''+ (initialRowSpace + index) +':'+ columnToLetter(initialColumnSpace + 1 + lastMonth)+''+ (initialRowSpace + index) +')); "linewidth"\\2})');
       // RESETTA IL VALORE DI lastLineCategory
       lastLineCategory = 1;
       previousCategoryName = item;
@@ -241,6 +279,17 @@ function subCategoryStatsTotal(type, settingsSheet, statsSheet, initialRowSpace,
         "AVERAGE("+ columnToLetter(initialColumnSpace + 2) +""+ (initialRowSpace + index) +":"+ columnToLetter(initialColumnSpace + 1 + lastMonth)+""+ (initialRowSpace + index) +")");
       statsSheet.getRange(initialRowSpace + index, initialColumnSpace + 16 /* 12 mesi + 2 colonna di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
         "IFERROR(("+ columnToLetter(initialColumnSpace + 1 + lastMonth) +""+ (initialRowSpace + index) +"/Q"+ (initialRowSpace + index) +")-1;\"-\")");
+      // Inseriesce la colonna con il totale per categoria.
+      statsSheet.getRange(initialRowSpace + index, initialColumnSpace + 17 /* 12 mesi + 3 colonne di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
+        "SUM("+ columnToLetter(initialColumnSpace + 2) +""+ (initialRowSpace + index) +":"+ columnToLetter(initialColumnSpace + 1 + lastMonth)+""+ (initialRowSpace + index) +")");
+      // Inserisce la colonna con il grafico a barre.
+      statsSheet.getRange(initialRowSpace + index, initialColumnSpace + 18 /* 12 mesi + 4 colonne di spazio + la colonna in cui deve scrivere */).setValue('= \n' +
+        'SPARKLINE(S'+ (initialRowSpace + index) +';{"charttype"\\"bar";"color1"\\"teal"; "max"\\ ROUNDUP(max(S'+ (initialRowSpace) +':S'+ (initialRowSpace + cleanedSettingValue.length - 1) +'))})');
+      // Inserisce la colonna con il grafico a linee.
+      statsSheet.getRange(initialRowSpace + index, initialColumnSpace + 19 /* 12 mesi + 5 colonne di spazio + la colonna in cui deve scrivere */).setValue('= \n' +
+        'SPARKLINE('+ columnToLetter(initialColumnSpace + 2) +''+ (initialRowSpace + index) +':'+ columnToLetter(initialColumnSpace + 1 + lastMonth)+''+ (initialRowSpace + index) +';' +
+        '{"color"\\IF('+ columnToLetter(initialColumnSpace + 1 + lastMonth) +''+ (initialRowSpace + index) +'>Q'+ (initialRowSpace + index) +';"red";"green");' +
+        '"ymax"\\ROUNDUP(max('+ columnToLetter(initialColumnSpace + 2) +''+ (initialRowSpace + index) +':'+ columnToLetter(initialColumnSpace + 1 + lastMonth)+''+ (initialRowSpace + index) +')); "linewidth"\\2})');
       // INCREMENTA DI 1 IL NUMERO DI RIGHE DA UNIRE QUANDO LE CATEGORIE SONO LA STESSA
       lastLineCategory++;
       previousCategoryName = item;
