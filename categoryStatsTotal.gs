@@ -24,6 +24,9 @@ function categoryStatsTotal(type, settingsSheet, statsSheet, categorySpace, init
       statsSheet.getRange((categorySpace === 0 ? initialRowSpace : initialRowSpace + categorySpace) - 1, initialColumnSpace + 1 + i).setValue(i + 1);
       statsSheet.getRange((categorySpace === 0 ? initialRowSpace : initialRowSpace + categorySpace) - 2, initialColumnSpace + 3 + i).setValue("Media");
       statsSheet.getRange((categorySpace === 0 ? initialRowSpace : initialRowSpace + categorySpace) - 2, initialColumnSpace + 4 + i).setValue("Ultimo mese risp media");
+      statsSheet.getRange((categorySpace === 0 ? initialRowSpace : initialRowSpace + categorySpace) - 2, initialColumnSpace + 5 + i).setValue("Totale");
+      statsSheet.getRange((categorySpace === 0 ? initialRowSpace : initialRowSpace + categorySpace) - 2, initialColumnSpace + 6 + i).setValue("Grafici");
+      statsSheet.getRange((categorySpace === 0 ? initialRowSpace : initialRowSpace + categorySpace) - 2, initialColumnSpace + 6 + i, 1, 2).merge();
     }else{
       statsSheet.getRange((categorySpace === 0 ? initialRowSpace : initialRowSpace + categorySpace) - 2, initialColumnSpace + 1 + i).setValue(months[i]);
       statsSheet.getRange((categorySpace === 0 ? initialRowSpace : initialRowSpace + categorySpace) - 1, initialColumnSpace + 1 + i).setValue(i + 1);
@@ -46,6 +49,14 @@ function categoryStatsTotal(type, settingsSheet, statsSheet, categorySpace, init
   monthList = monthList.filter(n => n);
   // Ricavo l'ultimo mese inserito
   var lastMonth = Math.max.apply(null, monthList);
+  // Variabile utilizzata per sapere in anticipo il numero di categorie valide (e non sottocategorie). Viene usata per i grafici.
+  var categoryLengthCheck = [];
+  // Inserisco nella variabile tutte le categorie valide (e non sottocagetorie).
+  cleanedSettingValue.forEach(function(item){
+    if(categoryLengthCheck.indexOf(settingsValue[item][0]) === -1){
+      categoryLengthCheck.push(settingsValue[item][0]);
+    }
+  });
   cleanedSettingValue.forEach(function (item, index){
     // Se le due categorie sono differenti o se si tratta dell'ultima sottocategoria.
     if(index === (cleanedSettingValue.length - 1) || settingsValue[item][0] !== settingsValue[firstLineCategory][0]){
@@ -87,11 +98,23 @@ function categoryStatsTotal(type, settingsSheet, statsSheet, categorySpace, init
           });
           statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + e).setValue(string);
         }
-        // Inserisce la colonna con le medie e il rapporto ultimo mese/media.
+        // Inserisce la colonna con le medie.
         statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + 14 /* 12 mesi + 1 colonna di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
           "AVERAGE("+ columnToLetter(initialColumnSpace + 1) +""+ (initialRowSpace + categorySpace) +":"+ columnToLetter(initialColumnSpace + lastMonth)+""+ (initialRowSpace + categorySpace) +")");
+        // Inserisce la colonna con il rapporto ultimo mese/media.
         statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + 15 /* 12 mesi + 2 colonna di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
           "IFERROR(("+ columnToLetter(initialColumnSpace + lastMonth) +""+ (initialRowSpace + categorySpace) +"/Q"+ (initialRowSpace + categorySpace) +")-1;\"-\")");
+        // Inseriesce la colonna con il totale per categoria.
+        statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + 16 /* 12 mesi + 3 colonne di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
+          "SUM("+ columnToLetter(initialColumnSpace + 1) +""+ (initialRowSpace + categorySpace) +":"+ columnToLetter(initialColumnSpace + lastMonth)+""+ (initialRowSpace + categorySpace) +")");
+        // Inserisce la colonna con il grafico a barre.
+        statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + 17 /* 12 mesi + 4 colonne di spazio + la colonna in cui deve scrivere */).setValue('= \n' +
+          'SPARKLINE(S'+ (initialRowSpace + categorySpace) +';{"charttype"\\"bar";"color1"\\"teal"; "max"\\ ROUNDUP(max(S'+ (initialRowSpace) +':S'+ (initialRowSpace + categoryLengthCheck.length - 1) +'))})');
+        // Inserisce la colonna con il grafico a linee.
+        statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + 18 /* 12 mesi + 5 colonne di spazio + la colonna in cui deve scrivere */).setValue('= \n' +
+          'SPARKLINE('+ columnToLetter(initialColumnSpace + 1) +''+ (initialRowSpace + categorySpace) +':'+ columnToLetter(initialColumnSpace + lastMonth)+''+ (initialRowSpace + categorySpace) +';' +
+          '{"color"\\IF('+ columnToLetter(initialColumnSpace + lastMonth) +''+ (initialRowSpace + categorySpace) +'>Q'+ (initialRowSpace + categorySpace) +';"red";"green");' +
+          '"ymax"\\ROUNDUP(max('+ columnToLetter(initialColumnSpace + 1) +''+ (initialRowSpace + categorySpace) +':'+ columnToLetter(initialColumnSpace + lastMonth)+''+ (initialRowSpace + categorySpace) +')); "linewidth"\\2})');
         categorySpace++;
       // Se non si tratta dell'ultima sottocategoria.
       }else{
@@ -131,11 +154,23 @@ function categoryStatsTotal(type, settingsSheet, statsSheet, categorySpace, init
           });
           statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + e).setValue(string);
         }
-        // Inserisce la colonna con le medie e il rapporto ultimo mese/media.
+        // Inserisce la colonna con le medie.
         statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + 14 /* 12 mesi + 1 colonna di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
           "AVERAGE("+ columnToLetter(initialColumnSpace + 1) +""+ (initialRowSpace + categorySpace) +":"+ columnToLetter(initialColumnSpace + lastMonth)+""+ (initialRowSpace + categorySpace) +")");
-        statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + 15 /* 12 mesi + 2 colonna di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
+        // Inserisce la colonna con il rapporto ultimo mese/media.
+        statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + 15 /* 12 mesi + 2 colonne di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
           "IFERROR(("+ columnToLetter(initialColumnSpace + lastMonth) +""+ (initialRowSpace + categorySpace) +"/Q"+ (initialRowSpace + categorySpace) +")-1;\"-\")");
+        // Inseriesce la colonna con il totale per categoria.
+        statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + 16 /* 12 mesi + 3 colonne di spazio + la colonna in cui deve scrivere */).setValue("= \n" +
+          "SUM("+ columnToLetter(initialColumnSpace + 1) +""+ (initialRowSpace + categorySpace) +":"+ columnToLetter(initialColumnSpace + lastMonth)+""+ (initialRowSpace + categorySpace) +")");
+        // Inserisce la colonna con il grafico a barre.
+        statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + 17 /* 12 mesi + 4 colonne di spazio + la colonna in cui deve scrivere */).setValue('= \n' +
+          'SPARKLINE(S'+ (initialRowSpace + categorySpace) +';{"charttype"\\"bar";"color1"\\"teal"; "max"\\ ROUNDUP(max(S'+ (initialRowSpace) +':S'+ (initialRowSpace + categoryLengthCheck.length - 1) +'))})');
+        // Inserisce la colonna con il grafico a linee.
+        statsSheet.getRange(initialRowSpace + categorySpace, initialColumnSpace + 18 /* 12 mesi + 5 colonne di spazio + la colonna in cui deve scrivere */).setValue('= \n' +
+          'SPARKLINE('+ columnToLetter(initialColumnSpace + 1) +''+ (initialRowSpace + categorySpace) +':'+ columnToLetter(initialColumnSpace + lastMonth)+''+ (initialRowSpace + categorySpace) +';' +
+          '{"color"\\IF('+ columnToLetter(initialColumnSpace + lastMonth) +''+ (initialRowSpace + categorySpace) +'>Q'+ (initialRowSpace + categorySpace) +';"red";"green");' +
+          '"ymax"\\ROUNDUP(max('+ columnToLetter(initialColumnSpace + 1) +''+ (initialRowSpace + categorySpace) +':'+ columnToLetter(initialColumnSpace + lastMonth)+''+ (initialRowSpace + categorySpace) +')); "linewidth"\\2})');
         categorySpace++;
       }
       // Aggiorna il valore di firstLineCategory al fine di individuare la giusta posizione per la categoria successiva.
